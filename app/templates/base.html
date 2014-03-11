@@ -23,53 +23,17 @@
      <!-- Bootstrap stuff -->
      <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen"> 
      <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> 
-
+     <style>
+       body {
+         min-height: 2000px;
+         padding-top: 70px;
+       }
+     </style>
    </head>
 
    <body>
      {% block content %}{% endblock %}
-     <button id="disconnect" >Disconnect your Google account from this app</button>
    </body>
-   <script type="text/javascript">
-     var helper = (function() {
+   {% block script %}{% endblock %}
 
-         return {
-         /**
-          * Calls the server endpoint to disconnect the app for the user.
-          */
-disconnectServer: function() {
-// Revoke the server tokens
-$.ajax({
-type: 'POST',
-url: '{{ url_for('disconnect') }}',
-async: false,
-success: function(result) {
-console.log('revoke response: ' + result);
-// window.location = 'http://localhost:4567/login'          
-window.location = '{{ url_for('login') }}'          
-},
-error: function(e) {
-console.log(e);
-}
-});
-},
-  };
-})();
-
-/**
- * Perform jQuery initialization and check to ensure that you updated your
- * client ID.
- */
-$(document).ready(function() {
-    $('#disconnect').click(helper.disconnectServer);
-    });
-
-/**
- * Calls the helper method that handles the authentication flow.
- *
- * @param {Object} authResult An Object which contains the access token and
- *   other authentication information.
- */
-</script>
-
-</html>
+ </html>

@@ -1,4 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Hello, World!</h1>
+<div class = "navbar navbar-default navbar-fixed-top" style="line-height:20px; height:20px;">
+  <div class="pull-left" id="disconnect">
+    <button type="button" class="btn btn-default navbar-btn">Disconnect</button>
+  </div>
+</div>
 {% endblock %}
+{% block script %}
+<script type="text/javascript">
+  var helper = (function() {
+
+      return {
+      /**
+       * Calls the server endpoint to disconnect the app for the user.
+       */
+disconnectServer: function() {
+// Revoke the server tokens
+$.ajax({
+type: 'POST',
+url: '{{ url_for('disconnect') }}',
+async: false,
+success: function(result) {
+console.log('revoke response: ' + result);
+// window.location = 'http://localhost:4567/login'          
+window.location = '{{ url_for('login') }}'          
+},
+error: function(e) {
+console.log(e);
+}
+});
+},
+  };
+})();
+
+/**
+ * Perform jQuery initialization
+ */
+$(document).ready(function() {
+    $('#disconnect').click(helper.disconnectServer);
+    });
+  </script>
+
+  {% endblock %}
+
