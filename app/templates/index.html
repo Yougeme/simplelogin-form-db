@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Hello, World!</h1>
 <div class = "navbar navbar-default navbar-fixed-top" style="line-height:20px; height:20px;">
   <div class="pull-left" id="disconnect">
     <button type="button" class="btn btn-default navbar-btn">Disconnect</button>
+  </div>
+</div>
+<div class="container">
+  <h3>{{ thisuser.name.givenName+' '+thisuser.name.familyName }}</h3>
+  <div>
+    <img src="{{thisuser.image.url}}">
   </div>
 </div>
 {% endblock %}

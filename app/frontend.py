@@ -13,6 +13,8 @@ from flask import session
 from flask import redirect 
 from flask import url_for 
 
+import httplib2
+
 from simplekv.memory import DictStore
 from flaskext.kvsession import KVSessionExtension
 
@@ -39,7 +41,15 @@ def index():
   if credentials is None:
     return redirect(url_for('login'))
   else:
+    # Create a new authorized API client.
+    http = httplib2.Http()
+    http = credentials.authorize(http)
+
+    thisuser_request = SERVICE.people().get(userId='me')
+    thisuser = thisuser_request.execute(http=http)
+    
     return render_template('index.html',
-        appname = APPLICATION_NAME) 
+        appname = APPLICATION_NAME,
+        thisuser = thisuser) 
  
 
