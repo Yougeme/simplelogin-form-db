@@ -12,7 +12,6 @@ from flask import make_response
 from flask import render_template
 from flask import request
 from flask import session
-from flask import redirect 
 from flask import url_for 
 
 import httplib2
@@ -40,15 +39,6 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 SERVICE = build('plus', 'v1')
 
-@app.route('/')
-def index():
-  credentials=session.get('credentials')
-  if credentials is None:
-    return redirect(url_for('login'))
-  else:
-    return render_template('index.html',
-        appname = APPLICATION_NAME) 
- 
 @app.route('/login', methods=['GET'])
 def login():
   state = ''.join(random.choice(string.ascii_uppercase + string.digits)
