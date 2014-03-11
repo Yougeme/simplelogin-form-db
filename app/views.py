@@ -1,4 +1,4 @@
-#!/usr/bin/python
+from app import app
 
 __author__ = 'briandavidfarris@gmail.com'
 
@@ -25,7 +25,6 @@ from flaskext.kvsession import KVSessionExtension
 
 APPLICATION_NAME = 'Application Name'
 
-app = Flask(__name__)
 app.secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
                          for x in xrange(32))
 
@@ -41,11 +40,10 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 SERVICE = build('plus', 'v1')
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
   credentials=session.get('credentials')
   if credentials is None:
-    print "about to go to login"
     return redirect(url_for('login'))
   else:
     return render_template('index.html',
@@ -141,6 +139,6 @@ def disconnect():
     response.headers['Content-Type'] = 'application/json'
     return response
 
-if __name__ == '__main__':
-  app.debug = True
-  app.run(host='localhost', port=4567)
+#if __name__ == '__main__':
+#  app.debug = True
+#  app.run(host='localhost', port=4567)
