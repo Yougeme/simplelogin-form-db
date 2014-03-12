@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<div class = "navbar navbar-default navbar-fixed-top" style="line-height:20px; height:20px;">
+  <div class="pull-left" id="gConnect">
+    <button class="g-signin"
+      data-scope="https://www.googleapis.com/auth/plus.login"
+      data-requestvisibleactions="http://schemas.google.com/AddActivity"
+      data-clientId="{{ CLIENT_ID }}"
+      data-accesstype="offline"
+      data-callback="onSignInCallback"
+      data-theme="dark"
+      data-cookiepolicy="single_host_origin">
+    </button>
+  </div>
+</div>
+
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+  var helper = (function() {
+      var authResult = undefined;
+
+      return {
+      /**
+       * Hides the sign-in button and connects the server-side app after
+       * the user successfully signs in.
+       *
+       * @param {Object} authResult An Object which contains the access token and
+       *   other authentication information.
+       */
+onSignInCallback: function(authResult) {
+if (authResult['access_token']) {
+// The user is signed in
+this.authResult = authResult;
+helper.connectServer();
+$('#gConnect').show();
+
+} else if (authResult['error']) {
+// There was an error, which means the user is not signed in.
+// As an example, you can troubleshoot by writing to the console:
+  console.log('There was an error: ' + authResult['error']);
+  $('#gConnect').show();
+}
+//console.log('authResult', authResult);
+},
+  /**
+   * Calls the server endpoint to connect the app for the user. The client
+   * sends the one-time authorization code to the server and the server
+   * exchanges the code for its own tokens to use for offline API access.
+   * For more information, see:
+   *   https://developers.google.com/+/web/signin/server-side-flow
+   */
+connectServer: function() {
+                 console.log(this.authResult.code);
+                 $.ajax({
+type: 'POST',
+url: '{{ url_for('connect') }}?state={{ STATE }}',
+contentType: 'application/octet-stream; charset=utf-8',
+success: function(result) {
+console.log(result);
+window.location = '{{ url_for('index') }}'
+},
+processData: false,
+data: this.authResult.code
+});
+},
+  };
+})();
+
+/**
+ * Calls the helper method that handles the authentication flow.
+ *
+ * @param {Object} authResult An Object which contains the access token and
+ *   other authentication information.
+ */
+function onSignInCallback(authResult) {
+  helper.onSignInCallback(authResult);
+}
+</script>
+{% endblock %}
+
