@@ -10,7 +10,30 @@
   <div>
     <img src="{{thisuser.image.url}}">
   </div>
+  <form class="form-inline" action="" method="post">
+    {{form.hidden_tag()}}
+    {{form.text_entry(class="form-control")}}
+    {% for error in form.errors.text_entry %}
+    <span style="color: red;">[{{error}}]</span>
+    {% endfor %}
+    {{form.boolean_entry(class="checkbox")}}</br> 
+    {{form.date_entry(class="form-control")}}</br> 
+    {{form.select_entry(class="form-control")}}</br> 
+    {{form.integer_entry(class="form-control")}} 
+    </br>
+    <input class="btn btn-primary" type="submit" value="submit">
+  </form>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }} </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
 </div>
+
 {% endblock %}
 {% block script %}
 <script type="text/javascript">
@@ -45,7 +68,7 @@ console.log(e);
 $(document).ready(function() {
     $('#disconnect').click(helper.disconnectServer);
     });
-  </script>
+</script>
 
-  {% endblock %}
+{% endblock %}
 
