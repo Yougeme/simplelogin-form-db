@@ -55,8 +55,7 @@ def index():
     if form.validate_on_submit():
       flash('You entered:' + form.text_entry.data + ', boolean_entry=' + str(form.boolean_entry.data)+', date_entry='+form.date_entry.data.isoformat()+', select_entry='+form.select_entry.data+', integer_entry='+str(form.integer_entry.data))
     else:
-
-    return render_template('index.html',
+      return render_template('index.html',
         appname = APPLICATION_NAME,
         thisuser = thisuser,
         form = form) 
