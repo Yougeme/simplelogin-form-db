@@ -17,12 +17,37 @@
     <span style="color: red;">[{{error}}]</span>
     {% endfor %}
     {{form.boolean_entry(class="checkbox")}}</br> 
-    {{form.date_entry(class="form-control")}}</br> 
+    {{form.datetime_entry(class="form-control")}}</br> 
     {{form.select_entry(class="form-control")}}</br> 
     {{form.integer_entry(class="form-control")}} 
     </br>
     <input class="btn btn-primary" type="submit" value="submit">
   </form>
+  <table class="table">
+    {% for post in postlist %}
+    <tr>
+      <td>
+        {{ post.author.firstname }}
+      </td>
+       <td>
+        {{ post.text }}
+      </td>
+      <td>
+        {{ post.boolean }}
+      </td>
+      <td>
+        {{ post.timestamp.isoformat() }}
+      </td>
+      <td>
+        {{ post.select }}
+      </td>
+      <td>
+        {{ post.integer }}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   <ul>
@@ -68,7 +93,7 @@ console.log(e);
 $(document).ready(function() {
     $('#disconnect').click(helper.disconnectServer);
     });
-</script>
+  </script>
 
-{% endblock %}
+  {% endblock %}
 

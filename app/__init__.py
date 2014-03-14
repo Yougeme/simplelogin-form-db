@@ -8,3 +8,5 @@ db = SQLAlchemy(app)
 from app import login
 from app import frontend
 from app import models
+
+

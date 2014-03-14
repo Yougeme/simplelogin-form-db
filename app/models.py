@@ -5,9 +5,10 @@ ROLE_ADMIN = 1
 
 class User(db.Model):
   id = db.Column(db.Integer, primary_key = True)
-  firstname = db.Column(db.String(64), index = True, unique = True)
-  lastname = db.Column(db.String(64), index = True, unique = True)
-  email = db.Column(db.String(120), index = True, unique = True)
+  googleid = db.Column(db.String(64), index = True, unique = True)
+  firstname = db.Column(db.String(64))
+  lastname = db.Column(db.String(64))
+  email = db.Column(db.String(120))
   role = db.Column(db.SmallInteger, default = ROLE_USER)
   posts = db.relationship('Post', backref = 'author', lazy = 'dynamic')
 
@@ -16,9 +17,12 @@ class User(db.Model):
 
 class Post(db.Model):
   id = db.Column(db.Integer, primary_key = True)
-  body = db.Column(db.String(140))
+  text = db.Column(db.String(140))
+  boolean = db.Column(db.Boolean)
+  select = db.Column(db.String(140))
   timestamp = db.Column(db.DateTime)
+  integer = db.Column(db.Integer)
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
   def __repr__(self):
-    return '<Post %r>' % (self.body)
+    return '<Post %r>' % (self.text)

@@ -128,7 +128,3 @@ def disconnect():
         json.dumps('Failed to revoke token for given user.', 400))
     response.headers['Content-Type'] = 'application/json'
     return response
-
-#if __name__ == '__main__':
-#  app.debug = True
-#  app.run(host='localhost', port=4567)

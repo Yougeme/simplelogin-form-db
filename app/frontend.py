@@ -1,4 +1,4 @@
-from app import app
+from app import app,db
 
 __author__ = 'briandavidfarris@gmail.com'
 
@@ -9,12 +9,12 @@ from apiclient.discovery import build
 
 from flask import Flask
 from flask import render_template
-from flask import flash
 from flask import session
 from flask import redirect 
 from flask import url_for 
 
 from forms import BlahForm
+from models import User, ROLE_USER, ROLE_ADMIN, Post
 
 import httplib2
 
@@ -24,7 +24,7 @@ from flaskext.kvsession import KVSessionExtension
 APPLICATION_NAME = 'Application Name'
 
 app.secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                         for x in xrange(32))
+    for x in xrange(32))
 
 # See the simplekv documentation for details
 store = DictStore()
@@ -50,16 +50,39 @@ def index():
 
     thisuser_request = SERVICE.people().get(userId='me')
     thisuser = thisuser_request.execute(http=http)
-   
+
+    googleid = thisuser['id']
+    firstname = thisuser['name']['givenName']
+    lastname = thisuser['name']['familyName']
+    email = thisuser['emails'][0]['value']
+    user = User.query.filter_by(googleid = googleid).first()
+    if user is None:
+      user = User(googleid=googleid,
+          firstname = firstname,
+          lastname = lastname,
+          email=email,
+          role=ROLE_USER)
+
+      db.session.add(user)
+      db.session.commit()
+
     form = BlahForm()
     if form.validate_on_submit():
-      flash('You entered:' + form.text_entry.data + ', boolean_entry=' + str(form.boolean_entry.data)+', date_entry='+form.date_entry.data.isoformat()+', select_entry='+form.select_entry.data+', integer_entry='+str(form.integer_entry.data))
-    else:
-      return render_template('index.html',
+      post = Post( text=form.text_entry.data,
+          boolean=form.boolean_entry.data,
+          timestamp=form.datetime_entry.data,
+          select=form.select_entry.data,
+          integer=form.integer_entry.data,
+          author=user)
+      db.session.add(post)
+      db.session.commit()
+
+    return render_template('index.html',
         appname = APPLICATION_NAME,
         thisuser = thisuser,
-        form = form) 
- 
+        form = form,
+        postlist = Post.query.all()) 
+
 
 
 
