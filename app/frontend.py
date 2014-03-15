@@ -12,6 +12,7 @@ from flask import render_template
 from flask import session
 from flask import redirect 
 from flask import url_for 
+from flask import request
 
 from forms import BlahForm
 from models import User, ROLE_USER, ROLE_ADMIN, Post
@@ -40,6 +41,7 @@ SERVICE = build('plus', 'v1')
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():
+  print "index"
   credentials=session.get('credentials')
   if credentials is None:
     return redirect(url_for('login'))
@@ -77,6 +79,7 @@ def index():
       db.session.add(post)
       db.session.commit()
 
+    print "about to render index"
     return render_template('index.html',
         appname = APPLICATION_NAME,
         thisuser = thisuser,
@@ -84,5 +87,16 @@ def index():
         postlist = Post.query.all()) 
 
 
+
+@app.route('/delete', methods=['POST'])
+def delete():
+  print "inside delete"
+  entry_id = request.args.get('entry_id')
+  print "entry_id: ",entry_id
+  db.session.delete(Post.query.get(entry_id))
+  print "deleted"
+  db.session.commit()
+  print "committed"
+  return redirect(url_for('index'))
 
 

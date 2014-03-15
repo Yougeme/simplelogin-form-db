@@ -44,9 +44,16 @@
       <td>
         {{ post.integer }}
       </td>
+      <td>
+        <form class="form-inline" role="form">
+          <button type="submit" formaction="/delete?entry_id={{post.id}}" formmethod="post" class="btn btn-default">delete</button>          
+        </form>
+      </td>
     </tr>
     {% endfor %}
   </table>
+
+
 
   {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -76,8 +83,20 @@ url: '{{ url_for('disconnect') }}',
 async: false,
 success: function(result) {
 console.log('revoke response: ' + result);
-// window.location = 'http://localhost:4567/login'          
 window.location = '{{ url_for('login') }}'          
+},
+error: function(e) {
+console.log(e);
+}
+});
+},
+deleteEntry: function(eid) {
+               $.ajax({
+type: 'POST',
+url: '{{ url_for('delete') }}?entry_id='+eid,
+async: false,
+success: function(result) {
+console.log('deleted');
 },
 error: function(e) {
 console.log(e);
